@@ -115,7 +115,7 @@ module "eks" {
   }
 
   eks_managed_node_groups = {
-    primary_nodes = {
+    primary_nodes_v3 = {
       min_size     = 1
       max_size     = 3
       desired_size = 2
@@ -124,6 +124,19 @@ module "eks" {
       ami_type       = "AL2023_x86_64_STANDARD"
       instance_types = ["m7i-flex.large"]
       capacity_type  = "ON_DEMAND"
+      
+      block_device_mappings = {
+        xvda = {
+          device_name = "/dev/xvda"
+          ebs = {
+            volume_size           = 50
+            volume_type           = "gp3"
+            iops                  = 3000
+            throughput            = 125
+            delete_on_termination = true
+          }
+        }
+      }
     }
   }
 }

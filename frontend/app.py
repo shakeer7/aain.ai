@@ -4,7 +4,7 @@ import streamlit as st
 
 # Set page config
 st.set_page_config(
-    page_title="Quran & Hadith RAG Assistant",
+    page_title="aain.ai",
     page_icon="📖",
     layout="wide"
 )
@@ -59,7 +59,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Title and header
-st.title("📖 Quran & Hadith RAG Assistant")
+st.title("📖 aain.ai")
 st.markdown("*A faithful, citation-verified AI assistant grounded strictly in the Holy Quran and authentic Hadiths.*")
 
 # Sidebar

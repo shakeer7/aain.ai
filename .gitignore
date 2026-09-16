@@ -56,3 +56,6 @@ data/qdrant_storage/
 .idea/
 .DS_Store
 Thumbs.db
+
+
+ssh-keys.py

@@ -14,7 +14,7 @@ from verification.source_validator import SourceValidator
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="Quran & Hadith RAG Assistant", version="1.0.0")
+app = FastAPI(title="aain.ai", version="1.0.0")
 
 # Global instances for dependency injection
 embedder = None
