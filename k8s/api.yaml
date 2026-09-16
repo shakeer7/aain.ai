@@ -24,7 +24,7 @@ spec:
         - name: QDRANT_HOST
           value: "qdrant-svc"
         - name: LLM_MODEL
-          value: "llama3-8b-8192"
+          value: "openai/gpt-oss-20b"
         - name: GROQ_API_KEY
           valueFrom:
             secretKeyRef:

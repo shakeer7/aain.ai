@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 class RetrievalEvaluator:
     def __init__(self, model_name: str = None):
         # RAGAS natively integrates nicely with Langchain wrappers
-        model = model_name or os.getenv("LLM_MODEL", "llama3-8b-8192")
+        model = model_name or os.getenv("LLM_MODEL", "openai/gpt-oss-20b")
         llm = ChatGroq(model=model)
         self.ragas_llm = LangchainLLMWrapper(llm)
 
