@@ -11,14 +11,14 @@ class Retriever:
         """Retrieves top_k relevant documents for a given query."""
         query_embedding = self.embedder.embed_query(query)
         
-        results = self.vector_store.client.search(
+        response = self.vector_store.client.query_points(
             collection_name=self.vector_store.collection_name,
-            query_vector=query_embedding,
+            query=query_embedding,
             limit=top_k
         )
         
         retrieved_docs = []
-        for res in results:
+        for res in response.points:
             retrieved_docs.append({
                 "score": res.score,
                 "doc_id": res.payload["doc_id"],
