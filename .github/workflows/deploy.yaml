@@ -113,6 +113,6 @@ jobs:
         kubectl apply -f k8s/api.yaml
         kubectl apply -f k8s/frontend.yaml
         
-        # Wait for deployments to roll out
-        kubectl rollout status deployment/api-deployment --timeout=180s
-        kubectl rollout status deployment/frontend-deployment --timeout=180s
+        # Wait for deployments to roll out (600s to allow sequential 3.3GB image pulls across nodes)
+        kubectl rollout status deployment/api-deployment --timeout=600s
+        kubectl rollout status deployment/frontend-deployment --timeout=600s
