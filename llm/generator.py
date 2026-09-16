@@ -11,7 +11,7 @@ class Generator:
     def __init__(self, model_name: str = None):
         """Initializes the LLM Generator using the official Google GenAI SDK."""
         self.client = genai.Client()
-        self.model_name = model_name or os.getenv("GEMINI_MODEL", "gemini-3.1-pro-preview")
+        self.model_name = model_name or os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 
     def format_context(self, documents: List[Dict[str, Any]]) -> str:
         context_parts = []

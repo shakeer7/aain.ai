@@ -24,7 +24,7 @@ spec:
         - name: QDRANT_HOST
           value: "qdrant-svc"
         - name: GEMINI_MODEL
-          value: "gemini-3.1-pro-preview"
+          value: "gemini-2.5-flash"
         - name: GEMINI_API_KEY
           valueFrom:
             secretKeyRef:
