@@ -3,7 +3,7 @@ import logging
 from ragas import evaluate
 from ragas.metrics import context_precision, context_recall
 from datasets import Dataset
-from langchain_groq import ChatGroq
+from langchain_aws import ChatBedrock
 from langchain_core.language_models.llms import BaseLLM
 from ragas.llms import LangchainLLMWrapper
 
@@ -12,8 +12,8 @@ logger = logging.getLogger(__name__)
 class RetrievalEvaluator:
     def __init__(self, model_name: str = None):
         # RAGAS natively integrates nicely with Langchain wrappers
-        model = model_name or os.getenv("LLM_MODEL", "openai/gpt-oss-20b")
-        llm = ChatGroq(model=model)
+        model = model_name or os.getenv("LLM_MODEL", "meta.llama3-8b-instruct-v1:0")
+        llm = ChatBedrock(model_id=model, region_name=os.getenv("AWS_DEFAULT_REGION", "ap-south-1"))
         self.ragas_llm = LangchainLLMWrapper(llm)
 
     def evaluate_retrieval(self, eval_dataset: Dataset) -> dict:

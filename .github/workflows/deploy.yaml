@@ -97,13 +97,13 @@ jobs:
         
     - name: Create or update LLM API Secret
       env:
-        GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
-        if [ -n "$GROQ_API_KEY" ]; then
-          kubectl create secret generic llm-secrets \
-            --from-literal=groq_api_key="$GROQ_API_KEY" \
-            --dry-run=client -o yaml | kubectl apply -f -
-        fi
+        kubectl create secret generic llm-secrets \
+          --from-literal=AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" \
+          --from-literal=AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" \
+          --dry-run=client -o yaml | kubectl apply -f -
 
     - name: Deploy to Kubernetes
       env:

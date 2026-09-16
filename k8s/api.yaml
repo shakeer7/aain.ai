@@ -24,12 +24,20 @@ spec:
         - name: QDRANT_HOST
           value: "qdrant-svc"
         - name: LLM_MODEL
-          value: "openai/gpt-oss-20b"
-        - name: GROQ_API_KEY
+          value: "meta.llama3-8b-instruct-v1:0"
+        - name: AWS_DEFAULT_REGION
+          value: "ap-south-1"
+        - name: AWS_ACCESS_KEY_ID
           valueFrom:
             secretKeyRef:
               name: llm-secrets
-              key: groq_api_key
+              key: AWS_ACCESS_KEY_ID
+              optional: true
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: llm-secrets
+              key: AWS_SECRET_ACCESS_KEY
               optional: true
         resources:
           requests:

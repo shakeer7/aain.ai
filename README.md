@@ -58,7 +58,7 @@ The system is fully containerized and deployable on AWS EKS via Terraform and Ku
 
 ```
 User Query → Frontend (Streamlit) → API (FastAPI) → Hybrid Retrieval (Qdrant + BM25)
-           → Reranker (Cross-Encoder) → LLM Generation (Groq API / Llama 3)
+           → Reranker (Cross-Encoder) → LLM Generation (AWS Bedrock / Llama 3)
            → Citation Verification → Verified Response
 ```
 
@@ -68,8 +68,9 @@ User Query → Frontend (Streamlit) → API (FastAPI) → Hybrid Retrieval (Qdra
 flowchart TD
     subgraph External_Network["🌍 Public Internet & End-User"]
         User["👤 End-User Client (Web Browser)"]
-        GroqAPI["✨ Groq API (LLM Engine - Llama 3)"]
     end
+    
+    BedrockAPI["✨ AWS Bedrock (LLM Engine - Llama 3)"]
 
     subgraph AWS_VPC["☁️ AWS VPC (10.0.0.0/16)"]
         subgraph Public_Subnets["Public Subnets (AZ-a & AZ-b)"]
@@ -119,9 +120,7 @@ flowchart TD
     QD_POD --- EBS
 
     %% LLM Outbound Egress Traffic
-    API_POD1 & API_POD2 -->|Outbound HTTPS :443| NAT
-    NAT --> IGW
-    IGW -->|API Call & Citation Verification| GroqAPI
+    API_POD1 & API_POD2 -->|API Call & Citation Verification| BedrockAPI
 ```
 
 ### 🔄 Traffic Path Breakdown
@@ -144,7 +143,7 @@ flowchart TD
 4. **Local Reranking**: Candidate passages (Quranic ayahs and authentic hadiths) are scored and reranked using an in-process Cross-Encoder (`cross-encoder/ms-marco-MiniLM-L-6-v2`).
 
 #### 4. 🔒 Outbound Egress (API to LLM & Verification)
-1. **Secure NAT Egress**: The backend constructs an exact prompt enforcing strict grounding and reaches out to the Groq API over HTTPS (`443`).
+1. **Secure API Request**: The backend constructs an exact prompt enforcing strict grounding and reaches out to AWS Bedrock.
 2. **NAT Gateway Routing**: Traffic from private worker subnets routes through the VPC's AWS NAT Gateway to the Internet Gateway.
 3. **Hallucination Verification**: The Llama 3 model returns generated candidate claims, followed by an automated citation verification check.
 4. **Final Response**: The JSON response is routed back through the internal stack to the user's browser, displaying verified Arabic text, English translations, and citation badges.

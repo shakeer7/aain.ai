@@ -7,14 +7,14 @@ from ragas.metrics import (
     answer_relevancy,
 )
 from ragas.llms import LangchainLLMWrapper
-from langchain_groq import ChatGroq
+from langchain_aws import ChatBedrock
 
 logger = logging.getLogger(__name__)
 
 class GenerationEvaluator:
     def __init__(self, model_name: str = None):
-        model = model_name or os.getenv("LLM_MODEL", "openai/gpt-oss-20b")
-        llm = ChatGroq(model=model)
+        model = model_name or os.getenv("LLM_MODEL", "meta.llama3-8b-instruct-v1:0")
+        llm = ChatBedrock(model_id=model, region_name=os.getenv("AWS_DEFAULT_REGION", "ap-south-1"))
         self.ragas_llm = LangchainLLMWrapper(llm)
 
     def evaluate_generation(self, eval_dataset: Dataset) -> dict:

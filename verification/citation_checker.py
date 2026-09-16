@@ -2,15 +2,15 @@ import os
 import logging
 import json
 from typing import List, Dict, Any, Tuple
-import groq
+import boto3
 from llm.prompts import CITATION_VERIFICATION_PROMPT
 
 logger = logging.getLogger(__name__)
 
 class CitationChecker:
     def __init__(self, model_name: str = None):
-        self.client = groq.Groq()
-        self.model_name = model_name or os.getenv("LLM_MODEL", "openai/gpt-oss-20b")
+        self.client = boto3.client("bedrock-runtime", region_name=os.getenv("AWS_DEFAULT_REGION", "ap-south-1"))
+        self.model_name = model_name or os.getenv("LLM_MODEL", "meta.llama3-8b-instruct-v1:0")
 
     def format_context(self, documents: List[Dict[str, Any]]) -> str:
         context_parts = []
@@ -34,19 +34,27 @@ class CitationChecker:
             answer=generated_answer
         )
         
-        logger.info("Running citation verification via Groq...")
+        logger.info("Running citation verification via AWS Bedrock...")
         
         try:
-            response = self.client.chat.completions.create(
-                model=self.model_name,
-                messages=[
-                    {"role": "user", "content": prompt}
-                ],
-                temperature=0.0, # Must be deterministic
-                response_format={"type": "json_object"}
+            # Enforce JSON output in the prompt itself since Bedrock raw API doesn't have a response_format toggle
+            json_prompt = prompt + "\n\nRespond ONLY with a valid JSON object matching this schema: {\"is_faithful\": boolean, \"reasoning\": \"string\"}"
+            formatted_prompt = f"<|begin_of_text|><|start_header_id|>user<|end_header_id|>\n\n{json_prompt}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
+            
+            request_body = {
+                "prompt": formatted_prompt,
+                "max_gen_len": 512,
+                "temperature": 0.0,
+                "top_p": 0.8
+            }
+            
+            response = self.client.invoke_model(
+                modelId=self.model_name,
+                body=json.dumps(request_body)
             )
             
-            result_text = response.choices[0].message.content
+            response_body = json.loads(response.get('body').read())
+            result_text = response_body.get('generation', '')
             
             try:
                 # Expecting JSON like {"is_faithful": true, "reasoning": "..."}
