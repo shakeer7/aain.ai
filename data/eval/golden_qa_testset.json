@@ -1,0 +1,41 @@
+{
+  "benchmark_suite": "Islamic RAG Grounded Evaluation",
+  "version": "1.0",
+  "queries": [
+    {
+      "question": "What are the five pillars of Islam according to Hadith?",
+      "ground_truth": "The five pillars of Islam are: testifying that none has the right to be worshipped but Allah and Muhammad is His Messenger, establishing the prayers, giving Zakat, performing Hajj, and fasting during Ramadan.",
+      "expected_sources": [
+        "Sahih al-Bukhari - Book 2, Hadith 8"
+      ]
+    },
+    {
+      "question": "What does Islam teach about intentions and motives?",
+      "ground_truth": "Actions are judged and rewarded strictly according to intentions and motives.",
+      "expected_sources": [
+        "Sahih al-Bukhari - Book 1, Hadith 1"
+      ]
+    },
+    {
+      "question": "What does the Quran say about God being with the patient?",
+      "ground_truth": "The Quran commands the believers to seek help through patience and prayer, and affirms that God is indeed with those who are patient.",
+      "expected_sources": [
+        "Quran 2:153"
+      ]
+    },
+    {
+      "question": "Who is most entitled to good companionship and dutiful treatment according to the Prophet?",
+      "ground_truth": "The mother is entitled to the highest companionship and honor, repeated three times by the Prophet, followed by the father.",
+      "expected_sources": [
+        "Sahih al-Bukhari - Book 78, Hadith 5971"
+      ]
+    },
+    {
+      "question": "What is the virtue and meaning of Ayat al-Kursi?",
+      "ground_truth": "Ayat al-Kursi (Quran 2:255) affirms that Allah is the Ever-Living, Sustainer of all existence; neither slumber nor sleep overtakes Him; to Him belongs all that is in the heavens and the earth.",
+      "expected_sources": [
+        "Quran 2:255"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,116 @@
+name: AWS Cloud CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  AWS_REGION: ap-south-1
+  EKS_CLUSTER_NAME: quran-hadith-rag-cluster
+  ECR_API_REPO: quran-hadith-rag-api
+  ECR_FRONTEND_REPO: quran-hadith-rag-frontend
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Run Unit Tests
+      run: |
+        pytest tests/ -v
+
+  build-and-push:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+        
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+      
+    - name: Build, tag, and push images to Amazon ECR
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        # 1. Build and push API image
+        docker build -t $ECR_REGISTRY/$ECR_API_REPO:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_API_REPO:latest .
+        docker push $ECR_REGISTRY/$ECR_API_REPO:$IMAGE_TAG
+        docker push $ECR_REGISTRY/$ECR_API_REPO:latest
+        
+        # 2. Build and push Frontend image
+        docker build -t $ECR_REGISTRY/$ECR_FRONTEND_REPO:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_FRONTEND_REPO:latest -f frontend/Dockerfile .
+        docker push $ECR_REGISTRY/$ECR_FRONTEND_REPO:$IMAGE_TAG
+        docker push $ECR_REGISTRY/$ECR_FRONTEND_REPO:latest
+
+  deploy-to-eks:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+        
+    - name: Update kubeconfig
+      run: |
+        aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
+        
+    - name: Create or update Gemini API Secret
+      env:
+        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      run: |
+        if [ -n "$GEMINI_API_KEY" ]; then
+          kubectl create secret generic llm-secrets \
+            --from-literal=gemini_api_key="$GEMINI_API_KEY" \
+            --dry-run=client -o yaml | kubectl apply -f -
+        fi
+
+    - name: Deploy to Kubernetes
+      env:
+        ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        # Apply StorageClass and Qdrant DB
+        kubectl apply -f k8s/storageclass.yaml
+        kubectl apply -f k8s/qdrant.yaml
+        
+        # Update image tags and deploy API & Frontend
+        sed -i "s|image: .*quran-hadith-rag-api:.*|image: $ECR_REGISTRY/$ECR_API_REPO:$IMAGE_TAG|g" k8s/api.yaml
+        sed -i "s|image: .*quran-hadith-rag-frontend:.*|image: $ECR_REGISTRY/$ECR_FRONTEND_REPO:$IMAGE_TAG|g" k8s/frontend.yaml
+        
+        kubectl apply -f k8s/api.yaml
+        kubectl apply -f k8s/frontend.yaml
+        
+        # Wait for deployments to roll out
+        kubectl rollout status deployment/api-deployment --timeout=180s
+        kubectl rollout status deployment/frontend-deployment --timeout=180s

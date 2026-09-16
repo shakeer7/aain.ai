@@ -1,0 +1,14 @@
+fastapi>=0.100.0
+uvicorn>=0.23.0
+qdrant-client>=1.6.0
+sentence-transformers>=2.2.2
+google-genai>=0.1.0
+pandas>=2.0.0
+pydantic>=2.0.0
+pydantic-settings
+ragas>=0.1.0
+pytest>=7.0.0
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+datasets>=2.14.0
+python-dotenv

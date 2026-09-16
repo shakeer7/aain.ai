@@ -1,0 +1,62 @@
+[
+  {
+    "collection": "Sahih al-Bukhari",
+    "book": "1",
+    "hadith_number": "1",
+    "chapter_ar": "كتاب بدء الوحي",
+    "chapter_en": "Revelation",
+    "text_ar": "إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ، وَإِنَّمَا لِكُلِّ امْرِئٍ مَا نَوَى، فَمَنْ كَانَتْ هِجْرَتُهُ إِلَى دُنْيَا يُصِيبُهَا أَوْ إِلَى امْرَأَةٍ يَنْكِحُهَا فَهِجْرَتُهُ إِلَى مَا هَاجَرَ إِلَيْهِ.",
+    "text_en": "Actions are judged by motives (intentions), so each man will have what he intended. Thus, he whose migration was to achieve some worldly benefit or to marry a woman, his migration was for that which he migrated.",
+    "source": "Sahih al-Bukhari - Book 1, Hadith 1"
+  },
+  {
+    "collection": "Sahih al-Bukhari",
+    "book": "2",
+    "hadith_number": "8",
+    "chapter_ar": "كتاب الإيمان",
+    "chapter_en": "Belief",
+    "text_ar": "بُنِيَ الإِسْلاَمُ عَلَى خَمْسٍ: شَهَادَةِ أَنْ لاَ إِلَهَ إِلاَّ اللَّهُ وَأَنَّ مُحَمَّدًا رَسُولُ اللَّهِ، وَإِقَامِ الصَّلاَةِ، وَإِيتَاءِ الزَّكَاةِ، وَالحَجِّ، وَصَوْمِ رَمَضَانَ.",
+    "text_en": "Islam is based on five principles: To testify that none has the right to be worshipped but Allah and Muhammad is Allah's Apostle; to offer the prayers dutifully; to pay Zakat; to perform Hajj; and to observe fast during Ramadan.",
+    "source": "Sahih al-Bukhari - Book 2, Hadith 8"
+  },
+  {
+    "collection": "Sahih al-Bukhari",
+    "book": "2",
+    "hadith_number": "13",
+    "chapter_ar": "كتاب الإيمان",
+    "chapter_en": "Belief",
+    "text_ar": "لاَ يُؤْمِنُ أَحَدُكُمْ حَتَّى يُحِبَّ لأَخِيهِ مَا يُحِبُّ لِنَفْسِهِ.",
+    "text_en": "None of you will have faith till he wishes for his (Muslim) brother what he likes for himself.",
+    "source": "Sahih al-Bukhari - Book 2, Hadith 13"
+  },
+  {
+    "collection": "Sahih Muslim",
+    "book": "1",
+    "hadith_number": "1",
+    "chapter_ar": "كتاب الإيمان",
+    "chapter_en": "The Book of Faith (Hadith Jibril)",
+    "text_ar": "أَنْ تُؤْمِنَ بِاللَّهِ وَمَلاَئِكَتِهِ وَكُتُبِهِ وَرُسُلِهِ وَالْيَوْمِ الآخِرِ وَتُؤْمِنَ بِالْقَدَرِ خَيْرِهِ وَشَرِّهِ.",
+    "text_en": "Faith is to believe in Allah, His Angels, His Books, His Messengers, the Last Day, and to believe in Divine Destiny, both the good and evil thereof.",
+    "source": "Sahih Muslim - Book 1, Hadith 1"
+  },
+  {
+    "collection": "Sahih Muslim",
+    "book": "45",
+    "hadith_number": "6518",
+    "chapter_ar": "كتاب البر والصلة والآداب",
+    "chapter_en": "Virtue, Good Manners and Joining Ties",
+    "text_ar": "مَثَلُ الْمُؤْمِنِينَ فِي تَوَادِّهِمْ وَتَرَاحُمِهِمْ وَتَعَاطُفِهِمْ مَثَلُ الْجَسَدِ إِذَا اشْتَكَى مِنْهُ عُضْوٌ تَدَاعَى لَهُ سَائِرُ الْجَسَدِ بِالسَّهَرِ وَالْحُمَّى.",
+    "text_en": "The similitude of believers in regard to mutual love, affection, and fellow-feeling is that of one body; when any limb aches, the whole body aches, because of sleeplessness and fever.",
+    "source": "Sahih Muslim - Book 45, Hadith 6518"
+  },
+  {
+    "collection": "Sahih al-Bukhari",
+    "book": "78",
+    "hadith_number": "5971",
+    "chapter_ar": "كتاب الأدب",
+    "chapter_en": "Good Manners",
+    "text_ar": "جَاءَ رَجُلٌ إِلَى رَسُولِ اللَّهِ صلى الله عليه وسلم فَقَالَ: يَا رَسُولَ اللَّهِ، مَنْ أَحَقُّ النَّاسِ بِحُسْنِ صَحَابَتِي؟ قَالَ: أُمُّكَ. قَالَ: ثُمَّ مَنْ؟ قَالَ: ثُمَّ أُمُّكَ. قَالَ: ثُمَّ مَنْ؟ قَالَ: ثُمَّ أُمُّكَ. قَالَ: ثُمَّ مَنْ؟ قَالَ: ثُمَّ أَبُوكَ.",
+    "text_en": "A man came to Allah's Messenger and said, 'O Allah's Messenger! Who is more entitled to be treated with the best companionship by me?' The Prophet said, 'Your mother.' The man said, 'Who is next?' The Prophet said, 'Your mother.' The man further said, 'Who is next?' The Prophet said, 'Your mother.' The man asked for the fourth time, 'Who is next?' The Prophet said, 'Your father.'",
+    "source": "Sahih al-Bukhari - Book 78, Hadith 5971"
+  }
+]
