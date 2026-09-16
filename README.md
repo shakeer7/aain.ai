@@ -261,7 +261,7 @@ pytest evaluation/
 
 ---
 
-## 🙏 A Note on Accuracy
+## ⭐️ A Note on Accuracy
 
 Working with the Quran and Hadith demands a higher bar than typical RAG applications. This system is designed to:
 - Never generate content not grounded in retrieved source text
