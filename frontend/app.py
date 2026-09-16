@@ -15,45 +15,125 @@ API_URL = os.getenv("API_URL", "http://localhost:8000")
 # Custom CSS for rich aesthetics
 st.markdown("""
 <style>
+    /* Background for the whole app */
+    .stApp {
+        background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+        background-attachment: fixed;
+    }
+
+    /* Glass effect for main blocks */
+    .stApp > header {
+        background-color: transparent;
+    }
+    .block-container {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 3rem !important;
+        margin-top: 2rem;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        color: white;
+    }
+    
+    /* General text adjustments for dark glass theme */
+    h1, h2, h3, h4, h5, h6, p, label, span {
+        color: #ffffff !important;
+    }
+    
+    /* Sidebar */
+    [data-testid="stSidebar"] {
+        background: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Input fields */
+    .stTextInput>div>div>input {
+        background: rgba(255, 255, 255, 0.1) !important;
+        color: white !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 10px !important;
+    }
+    .stTextInput>div>div>input::placeholder {
+        color: rgba(255, 255, 255, 0.5) !important;
+    }
+    
+    /* Buttons */
+    .stButton>button {
+        background: rgba(255, 255, 255, 0.15) !important;
+        color: white !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        border-radius: 12px !important;
+        backdrop-filter: blur(5px);
+        transition: all 0.3s ease;
+    }
+    .stButton>button:hover {
+        background: rgba(255, 255, 255, 0.25) !important;
+        border: 1px solid rgba(255, 255, 255, 0.5) !important;
+        transform: translateY(-2px);
+    }
+
+    /* Expander */
+    .streamlit-expanderHeader {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border-radius: 10px;
+        color: white !important;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    div[data-testid="stExpanderDetails"] {
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 0 0 10px 10px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Custom classes */
     .arabic-text {
         font-family: 'Amiri', 'Traditional Arabic', 'Scheherazade', serif;
-        font-size: 1.4rem;
+        font-size: 1.5rem;
         direction: rtl;
         text-align: right;
-        line-height: 2.0;
-        color: #1b5e20;
-        padding: 10px;
-        background-color: #f1f8e9;
-        border-radius: 8px;
-        border-right: 4px solid #4caf50;
-        margin-bottom: 8px;
+        line-height: 2.2;
+        color: #e0f2f1;
+        padding: 15px;
+        background-color: rgba(0, 0, 0, 0.25);
+        border-radius: 12px;
+        border-right: 4px solid #80cbc4;
+        margin-bottom: 12px;
     }
     .verified-badge {
         display: inline-block;
-        background-color: #e8f5e9;
-        color: #2e7d32;
-        padding: 4px 12px;
-        border-radius: 16px;
+        background: rgba(76, 175, 80, 0.15);
+        backdrop-filter: blur(5px);
+        color: #aed581;
+        padding: 6px 14px;
+        border-radius: 20px;
         font-weight: bold;
         font-size: 0.9rem;
-        border: 1px solid #a5d6a7;
+        border: 1px solid rgba(76, 175, 80, 0.4);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     .warning-badge {
         display: inline-block;
-        background-color: #fff3e0;
-        color: #e65100;
-        padding: 4px 12px;
-        border-radius: 16px;
+        background: rgba(255, 152, 0, 0.15);
+        backdrop-filter: blur(5px);
+        color: #ffcc80;
+        padding: 6px 14px;
+        border-radius: 20px;
         font-weight: bold;
         font-size: 0.9rem;
-        border: 1px solid #ffcc80;
+        border: 1px solid rgba(255, 152, 0, 0.4);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     .source-card {
-        padding: 12px;
-        margin-bottom: 12px;
-        border-radius: 8px;
-        background-color: #fafafa;
-        border: 1px solid #e0e0e0;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
     }
 </style>
 """, unsafe_allow_html=True)
