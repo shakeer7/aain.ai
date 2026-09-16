@@ -23,13 +23,13 @@ spec:
         env:
         - name: QDRANT_HOST
           value: "qdrant-svc"
-        - name: GEMINI_MODEL
-          value: "gemini-2.5-flash"
-        - name: GEMINI_API_KEY
+        - name: LLM_MODEL
+          value: "llama3-70b-8192"
+        - name: GROQ_API_KEY
           valueFrom:
             secretKeyRef:
               name: llm-secrets
-              key: gemini_api_key
+              key: groq_api_key
               optional: true
         resources:
           requests:

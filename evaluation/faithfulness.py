@@ -1,3 +1,4 @@
+import os
 import logging
 from datasets import Dataset
 from ragas import evaluate
@@ -6,13 +7,13 @@ from ragas.metrics import (
     answer_relevancy,
 )
 from ragas.llms import LangchainLLMWrapper
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_groq import ChatGroq
 
 logger = logging.getLogger(__name__)
 
 class GenerationEvaluator:
-    def __init__(self, model_name: str = "gemini-2.5-flash"):
-        llm = ChatGoogleGenerativeAI(model=model_name)
+    def __init__(self, model_name: str = "llama3-70b-8192"):
+        llm = ChatGroq(model=model_name)
         self.ragas_llm = LangchainLLMWrapper(llm)
 
     def evaluate_generation(self, eval_dataset: Dataset) -> dict:

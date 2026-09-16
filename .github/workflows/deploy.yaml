@@ -95,13 +95,13 @@ jobs:
       run: |
         aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
         
-    - name: Create or update Gemini API Secret
+    - name: Create or update LLM API Secret
       env:
-        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
       run: |
-        if [ -n "$GEMINI_API_KEY" ]; then
+        if [ -n "$GROQ_API_KEY" ]; then
           kubectl create secret generic llm-secrets \
-            --from-literal=gemini_api_key="$GEMINI_API_KEY" \
+            --from-literal=groq_api_key="$GROQ_API_KEY" \
             --dry-run=client -o yaml | kubectl apply -f -
         fi
 

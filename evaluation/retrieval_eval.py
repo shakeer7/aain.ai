@@ -1,19 +1,18 @@
+import os
 import logging
-from datasets import Dataset
 from ragas import evaluate
-from ragas.metrics import (
-    context_precision,
-    context_recall,
-)
+from ragas.metrics import context_precision, context_recall
+from datasets import Dataset
+from langchain_groq import ChatGroq
+from langchain_core.language_models.llms import BaseLLM
 from ragas.llms import LangchainLLMWrapper
-from langchain_google_genai import ChatGoogleGenerativeAI
 
 logger = logging.getLogger(__name__)
 
 class RetrievalEvaluator:
-    def __init__(self, model_name: str = "gemini-2.5-flash"):
+    def __init__(self, model_name: str = "llama3-70b-8192"):
         # RAGAS natively integrates nicely with Langchain wrappers
-        llm = ChatGoogleGenerativeAI(model=model_name)
+        llm = ChatGroq(model=model_name)
         self.ragas_llm = LangchainLLMWrapper(llm)
 
     def evaluate_retrieval(self, eval_dataset: Dataset) -> dict:
