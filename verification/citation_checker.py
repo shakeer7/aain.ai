@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 class CitationChecker:
     def __init__(self, model_name: str = None):
         self.client = groq.Groq()
-        self.model_name = model_name or os.getenv("LLM_MODEL", "llama3-70b-8192")
+        self.model_name = model_name or os.getenv("LLM_MODEL", "llama-3.3-70b-versatile")
 
     def format_context(self, documents: List[Dict[str, Any]]) -> str:
         context_parts = []

@@ -10,7 +10,7 @@ from ragas.llms import LangchainLLMWrapper
 logger = logging.getLogger(__name__)
 
 class RetrievalEvaluator:
-    def __init__(self, model_name: str = "llama3-70b-8192"):
+    def __init__(self, model_name: str = "llama-3.3-70b-versatile"):
         # RAGAS natively integrates nicely with Langchain wrappers
         llm = ChatGroq(model=model_name)
         self.ragas_llm = LangchainLLMWrapper(llm)
