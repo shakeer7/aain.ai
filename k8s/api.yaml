@@ -24,7 +24,7 @@ spec:
         - name: QDRANT_HOST
           value: "qdrant-svc"
         - name: LLM_MODEL
-          value: "llama-3.3-70b-versatile"
+          value: "llama3-8b-8192"
         - name: GROQ_API_KEY
           valueFrom:
             secretKeyRef:

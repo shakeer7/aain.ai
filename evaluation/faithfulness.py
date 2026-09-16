@@ -12,8 +12,9 @@ from langchain_groq import ChatGroq
 logger = logging.getLogger(__name__)
 
 class GenerationEvaluator:
-    def __init__(self, model_name: str = "llama-3.3-70b-versatile"):
-        llm = ChatGroq(model=model_name)
+    def __init__(self, model_name: str = None):
+        model = model_name or os.getenv("LLM_MODEL", "llama3-8b-8192")
+        llm = ChatGroq(model=model)
         self.ragas_llm = LangchainLLMWrapper(llm)
 
     def evaluate_generation(self, eval_dataset: Dataset) -> dict:
