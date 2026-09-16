@@ -1,3 +1,4 @@
+import os
 import logging
 import json
 from typing import List, Dict, Any, Tuple
@@ -8,9 +9,9 @@ from llm.prompts import CITATION_VERIFICATION_PROMPT
 logger = logging.getLogger(__name__)
 
 class CitationChecker:
-    def __init__(self, model_name: str = "gemini-2.5-pro"):
+    def __init__(self, model_name: str = None):
         self.client = genai.Client()
-        self.model_name = model_name
+        self.model_name = model_name or os.getenv("GEMINI_MODEL", "gemini-3.1-pro-preview")
 
     def format_context(self, documents: List[Dict[str, Any]]) -> str:
         context_parts = []

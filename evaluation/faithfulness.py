@@ -11,7 +11,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 logger = logging.getLogger(__name__)
 
 class GenerationEvaluator:
-    def __init__(self, model_name: str = "gemini-2.5-pro"):
+    def __init__(self, model_name: str = "gemini-3.1-pro-preview"):
         llm = ChatGoogleGenerativeAI(model=model_name)
         self.ragas_llm = LangchainLLMWrapper(llm)
 
