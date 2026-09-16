@@ -6,7 +6,8 @@
   PLACEHOLDER: Add a banner/hero screenshot of your app here.
   Example: ![App Banner](./assets/banner.png)
 -->
-![Banner Placeholder](https://via.placeholder.com/1200x400?text=Add+Your+Project+Banner+Here)
+<img width="1497" height="368" alt="image" src="https://github.com/user-attachments/assets/e8ccc4a6-8421-4951-9796-ea240a8d2777" />
+
 
 <p align="center">
   <img alt="Python" src="https://img.shields.io/badge/Python-3.10+-blue.svg">
@@ -37,8 +38,10 @@ The system is fully containerized and deployable on AWS EKS via Terraform and Ku
 
 | | |
 |---|---|
-| ![Screenshot 1 Placeholder](https://via.placeholder.com/500x300?text=Screenshot+1) | ![Screenshot 2 Placeholder](https://via.placeholder.com/500x300?text=Screenshot+2) |
-| ![Screenshot 3 Placeholder](https://via.placeholder.com/500x300?text=Screenshot+3) | ![Screenshot 4 Placeholder](https://via.placeholder.com/500x300?text=Screenshot+4) |
+
+ <img width="1920" height="1080" alt="aain ai1" src="https://github.com/user-attachments/assets/e49c53e7-cece-4f45-92ff-fc90d1a485c4" />
+
+<img width="1920" height="1080" alt="aain ai2" src="https://github.com/user-attachments/assets/97fdedf6-a0b2-4678-847d-fda421ba2b83" />
 
 ---
 
@@ -253,7 +256,8 @@ pytest evaluation/
 ```
 
 <!-- PLACEHOLDER: Add a screenshot of your evaluation results/dashboard here -->
-![Evaluation Results Placeholder](https://via.placeholder.com/900x300?text=Add+Evaluation+Results+Here)
+<img width="1920" height="1080" alt="aain ai2" src="https://github.com/user-attachments/assets/7aec48c1-beef-4d53-b87b-e9f0791cf6b1" />
+
 
 ---
 
