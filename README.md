@@ -54,19 +54,100 @@ The system is fully containerized and deployable on AWS EKS via Terraform and Ku
 
 ---
 
-## 🏗️ Architecture
-
-<!-- 
-  PLACEHOLDER: Add an architecture diagram here.
-  Example: ![Architecture Diagram](./assets/architecture.png)
--->
-![Architecture Diagram Placeholder](https://via.placeholder.com/900x450?text=Add+Architecture+Diagram+Here)
+## 🏗️ Architecture & Network Flow
 
 ```
-User Query → API (FastAPI) → Hybrid Retrieval (Qdrant + BM25)
-           → Reranker (Cross-Encoder) → LLM Generation
+User Query → Frontend (Streamlit) → API (FastAPI) → Hybrid Retrieval (Qdrant + BM25)
+           → Reranker (Cross-Encoder) → LLM Generation (Gemini)
            → Citation Verification → Verified Response
 ```
+
+### 🌐 End-User & Internal Cluster Network Flow
+
+```mermaid
+flowchart TD
+    subgraph External_Network["🌍 Public Internet & End-User"]
+        User["👤 End-User Client (Web Browser)"]
+        GeminiAPI["✨ Google Gemini API (LLM Engine)"]
+    end
+
+    subgraph AWS_VPC["☁️ AWS VPC (10.0.0.0/16)"]
+        subgraph Public_Subnets["Public Subnets (AZ-a & AZ-b)"]
+            IGW["Internet Gateway (IGW)"]
+            NLB["AWS Network Load Balancer (NLB)<br/>TCP: 80"]
+            NAT["NAT Gateway (Outbound Egress)"]
+        end
+
+        subgraph Private_Subnets["Private Worker Subnets (EKS 1.35)"]
+            subgraph K8s_Cluster["☸️ Amazon EKS Cluster"]
+                direction TB
+                
+                subgraph Frontend_Layer["Streamlit Frontend Tier"]
+                    FE_SVC["K8s Service: frontend-svc<br/>Type: LoadBalancer (NodePort 30208)"]
+                    FE_POD1["Pod: frontend-deployment (Replica 1)<br/>Port 8501"]
+                    FE_POD2["Pod: frontend-deployment (Replica 2)<br/>Port 8501"]
+                end
+
+                subgraph Backend_Layer["FastAPI Backend Tier"]
+                    API_SVC["K8s Service: api-svc<br/>Type: ClusterIP (Port 8000)"]
+                    API_POD1["Pod: api-deployment (Replica 1)<br/>Port 8000"]
+                    API_POD2["Pod: api-deployment (Replica 2)<br/>Port 8000"]
+                end
+
+                subgraph Storage_Layer["Vector DB & Storage Tier"]
+                    QD_SVC["K8s Service: qdrant-svc<br/>Type: ClusterIP (Port 6333 / 6334)"]
+                    QD_POD["StatefulSet: qdrant-0<br/>Port 6333 (HTTP) / 6334 (gRPC)"]
+                    EBS["AWS EBS gp3 Volume (20GB)<br/>StorageClass: ebs-gp3-sc"]
+                end
+            end
+        end
+    end
+
+    %% External Traffic Ingress
+    User -->|HTTP GET/POST :80| IGW
+    IGW --> NLB
+    NLB -->|NodePort :30208| FE_SVC
+    FE_SVC --> FE_POD1 & FE_POD2
+
+    %% Internal Microservice Traffic
+    FE_POD1 & FE_POD2 -->|HTTP POST /ask via CoreDNS :8000| API_SVC
+    API_SVC --> API_POD1 & API_POD2
+
+    %% Retrieval & DB Traffic
+    API_POD1 & API_POD2 -->|Vector Query :6333| QD_SVC
+    QD_SVC --> QD_POD
+    QD_POD --- EBS
+
+    %% LLM Outbound Egress Traffic
+    API_POD1 & API_POD2 -->|Outbound HTTPS :443| NAT
+    NAT --> IGW
+    IGW -->|API Call & Citation Verification| GeminiAPI
+```
+
+### 🔄 Traffic Path Breakdown
+
+#### 1. 🌐 External Ingress (End-User to Frontend)
+1. **User Request**: The user navigates to the public NLB DNS address (`http://<nlb-dns>.elb.ap-south-1.amazonaws.com`) on port `80`.
+2. **AWS Ingress Routing**: Traffic hits the **AWS Internet Gateway (IGW)** and is forwarded to the **AWS Network Load Balancer (NLB)** provisioned across public subnets in multi-AZ (`ap-south-1a`, `ap-south-1b`).
+3. **NodePort Dispatch**: The NLB routes the TCP traffic directly to target EC2 worker nodes on assigned NodePort `30208`.
+4. **Kube-Proxy Routing**: The in-cluster `kube-proxy` maps traffic from the `frontend-svc` abstraction to healthy `frontend-deployment` Streamlit pods running on container port `8501`.
+
+#### 2. ⚡ Internal Microservice Flow (Frontend to API)
+1. **Service Discovery**: The Streamlit frontend discovers the backend through in-cluster CoreDNS at `http://api-svc:8000`.
+2. **API Invocation**: Streamlit dispatches an HTTP POST request to `/ask` with user query payload and parameters (`top_k`, `verify_citations`).
+3. **ClusterIP Load Balancing**: The `api-svc` `ClusterIP` balances traffic evenly across active, healthy `api-deployment` pods.
+
+#### 3. 🔍 Data Retrieval & Embedding Engine
+1. **Local Query Vectorization**: The `api` pod passes the query to an in-process SentenceTransformer model to compute dense vector embeddings.
+2. **Vector DB Query**: The API queries the vector database through internal DNS `http://qdrant-svc:6333` using Qdrant's Universal Query API (`query_points`).
+3. **Storage Persistence**: The `qdrant-0` StatefulSet retrieves points from its attached AWS EBS gp3 volume (`/qdrant/storage`), dynamically mounted via AWS EBS CSI driver.
+4. **Local Reranking**: Candidate passages (Quranic ayahs and authentic hadiths) are scored and reranked using an in-process Cross-Encoder (`cross-encoder/ms-marco-MiniLM-L-6-v2`).
+
+#### 4. 🔒 Outbound Egress (API to LLM & Verification)
+1. **Secure NAT Egress**: The backend constructs an exact prompt enforcing strict grounding and reaches out to the Google Gemini API over HTTPS (`443`).
+2. **NAT Gateway Routing**: Traffic from private worker subnets routes through the VPC's AWS NAT Gateway to the Internet Gateway.
+3. **Hallucination Verification**: The Gemini model returns generated candidate claims, followed by an automated citation verification check.
+4. **Final Response**: The JSON response is routed back through the internal stack to the user's browser, displaying verified Arabic text, English translations, and citation badges.
 
 ---
 
