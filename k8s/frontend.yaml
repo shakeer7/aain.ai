@@ -30,6 +30,18 @@ spec:
           limits:
             cpu: "1"
             memory: "1Gi"
+        readinessProbe:
+          httpGet:
+            path: /_stcore/health
+            port: 8501
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /_stcore/health
+            port: 8501
+          initialDelaySeconds: 25
+          periodSeconds: 15
 ---
 apiVersion: v1
 kind: Service
